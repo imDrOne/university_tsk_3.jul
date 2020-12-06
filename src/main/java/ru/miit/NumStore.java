@@ -1,13 +1,28 @@
 package ru.miit;
 
+import javax.enterprise.event.Event;
+import ru.miit.annotations.Added;
+import ru.miit.annotations.Deleted;
+
+import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
+@Default
 public class NumStore {
     private ArrayList<Integer> numStore;
 
+    @Inject
+    @Added
+    Event<ArrayList<Integer>> addEvent;
+
+    @Inject
+    @Deleted
+    Event<ArrayList<Integer>> deleteEvent;
+
+
+
     public NumStore() {
-        super();
         this.numStore = new ArrayList<>();
     }
 
@@ -21,10 +36,12 @@ public class NumStore {
 
     public void addToNumStore(Integer num) {
         this.numStore.add(num);
+        addEvent.fire(numStore);
     }
 
     public void removeNumFromStoreByIndex(int index) {
         this.numStore.remove(index);
+        deleteEvent.fire(numStore);
     }
 
     @Override
